@@ -1,5 +1,7 @@
 package com.github.vitaliyyarovuy.idearesx;
 
+import com.intellij.ide.highlighter.DomSupportEnabled;
+import com.intellij.ide.highlighter.XmlLikeFileType;
 import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +12,7 @@ import javax.swing.*;
 /**
  * Created by vyarovuy on 12.06.2015.
  */
-public class ResxFileType extends LanguageFileType {
+public class ResxFileType extends XmlLikeFileType implements DomSupportEnabled {
     public static final ResxFileType INSTANCE = new ResxFileType();
 
     private ResxFileType() {
@@ -32,7 +34,7 @@ public class ResxFileType extends LanguageFileType {
     @NotNull
     @Override
     public String getDefaultExtension() {
-        return "rexs";
+        return "resx";
     }
 
     @Nullable

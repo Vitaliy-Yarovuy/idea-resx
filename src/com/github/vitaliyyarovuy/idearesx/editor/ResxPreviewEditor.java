@@ -8,11 +8,16 @@ import com.intellij.openapi.fileEditor.FileEditorLocation;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 import com.intellij.openapi.util.Key;
+import com.intellij.psi.xml.XmlDocument;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import java.awt.*;
 import java.beans.PropertyChangeListener;
 
 /**
@@ -20,14 +25,44 @@ import java.beans.PropertyChangeListener;
  */
 public class ResxPreviewEditor implements FileEditor {
     public static final String EDITOR_NAME = "resx editor";
-    protected Document document;
-    protected JEditorPane jEditorPane = new JEditorPane();
+    protected XmlDocument document;
+
+    protected final JPanel jEditorPane = new JPanel();
+    protected final JBScrollPane scrollPane = new JBScrollPane(jEditorPane);
 
 
-    public ResxPreviewEditor(@NotNull Document document) {
+    public ResxPreviewEditor(/*@NotNull*/ XmlDocument document) {
         this.document = document;
 
-        jEditorPane.setText("FULL TEXT");
+
+        String[] columnNames = {"First Name",
+                "Last Name",
+                "Sport",
+                "# of Years",
+                "Vegetarian"};
+
+        Object[][] data = {
+                {"Kathy", "Smith",
+                        "Snowboarding", new Integer(5), new Boolean(false)},
+                {"John", "Doe",
+                        "Rowing", new Integer(3), new Boolean(true)},
+                {"Sue", "Black",
+                        "Knitting", new Integer(2), new Boolean(false)},
+                {"Jane", "White",
+                        "Speed reading", new Integer(20), new Boolean(true)},
+                {"Joe", "Brown",
+                        "Pool", new Integer(10), new Boolean(false)}
+        };
+
+
+        TableModel model = new DefaultTableModel(data, columnNames);
+        JTable table = new JBTable(model);
+//        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+//        table.setFillsViewportHeight(true);
+
+        jEditorPane.setBackground(Color.GREEN);
+
+        jEditorPane.add(table);
 
         // Listen to the document modifications.
 //        this.document.addDocumentListener(new DocumentPreviewUpdateListener());
@@ -50,7 +85,7 @@ public class ResxPreviewEditor implements FileEditor {
     @NotNull
     @Override
     public JComponent getComponent() {
-        return new JBScrollPane(jEditorPane);
+        return scrollPane;
     }
 
     @Nullable
@@ -68,7 +103,7 @@ public class ResxPreviewEditor implements FileEditor {
     @NotNull
     @Override
     public FileEditorState getState(@NotNull FileEditorStateLevel fileEditorStateLevel) {
-        return null;
+        return FileEditorState.INSTANCE;
     }
 
     @Override

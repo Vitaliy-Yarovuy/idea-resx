@@ -1,9 +1,14 @@
 package com.github.vitaliyyarovuy.idearesx.editor;
 
 import com.github.vitaliyyarovuy.idearesx.ResxFileType;
+import com.intellij.ide.highlighter.XmlFileType;
+import com.intellij.lang.StdLanguages;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.xml.XmlFile;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,13 +20,18 @@ public class ResxPreviewEditorProvider implements FileEditorProvider {
 
     @Override
     public boolean accept(Project project, VirtualFile virtualFile) {
-        return virtualFile.getFileType() instanceof ResxFileType;
+        Boolean result = /*(virtualFile instanceof XmlFile) &&*/ (virtualFile.getFileType() instanceof ResxFileType);
+        return result;
     }
 
     @NotNull
     @Override
     public FileEditor createEditor(Project project, VirtualFile virtualFile) {
-        return new ResxPreviewEditor(FileDocumentManager.getInstance().getDocument(virtualFile));
+        PsiManager psiManager = PsiManager.getInstance(project);
+        final PsiFile psiFile= psiManager.findFile(virtualFile);
+        XmlFile file =  (XmlFile)psiFile;
+//        XmlFile file =  (XmlFile)psiFile.getViewProvider().getPsi(StdLanguages.XML);
+        return new ResxPreviewEditor(null/*,file.getDocument()*/);
     }
 
     @Override
@@ -32,7 +42,7 @@ public class ResxPreviewEditorProvider implements FileEditorProvider {
     @NotNull
     @Override
     public FileEditorState readState(@NotNull Element element, @NotNull Project project, @NotNull VirtualFile virtualFile) {
-        return null;
+        return FileEditorState.INSTANCE;
     }
 
     @Override
